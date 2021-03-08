@@ -39,8 +39,7 @@ public class Board {
 	
 	@Lob // 대용량 데이터
 	private String content; // 섬머노트 라이브러리 <html>태그가 섞여서 디자인이 됨 -> 글자수 어마어마
-	
-	@ColumnDefault("0")
+
 	private int count; // 조회수
 	
 	@ManyToOne(fetch = FetchType.EAGER) // Board=many , user=one 한명의 유저는 여러개의 게시글을 쓸 수 있다. EAGER는 불러올때 상세내용까지 다 불러와, LAZY는 조인해서 불러오긴 하는데 상세내용은 필요할 때 써
