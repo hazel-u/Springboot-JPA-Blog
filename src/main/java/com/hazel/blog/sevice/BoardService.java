@@ -9,10 +9,13 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.hazel.blog.dto.ReplySaveRequestDto;
 import com.hazel.blog.model.Board;
+import com.hazel.blog.model.Reply;
 import com.hazel.blog.model.RoleType;
 import com.hazel.blog.model.User;
 import com.hazel.blog.repository.BoardRepository;
+import com.hazel.blog.repository.ReplyRepository;
 import com.hazel.blog.repository.UserRepository;
 
 @Service
@@ -20,6 +23,9 @@ public class BoardService {
 
 	@Autowired
 	private BoardRepository boardRepository;
+	
+	@Autowired
+	private ReplyRepository replyRepository;
 
 	@Transactional
 	public void 글쓰기(Board board, User user) { // title, content
@@ -54,6 +60,16 @@ public class BoardService {
 		board.setTitle(requestBoard.getTitle());
 		board.setContent(requestBoard.getContent());
 		// 해당 함수로 종료시(Service가 종료될때) 트랜잭션이 종료됩니다. 이때 더티체킹이 일어나면서 자동 flush (commit)
+	}
+	
+	@Transactional
+	public void 댓글쓰기(ReplySaveRequestDto replySaveRequestDto) {
+		int result = replyRepository.mSave(replySaveRequestDto.getUserId(),replySaveRequestDto.getBoardId(), replySaveRequestDto.getContent());
+	}
+	
+	@Transactional
+	public void 댓글삭제(int replyId) {
+		replyRepository.deleteById(replyId);
 	}
 }
 

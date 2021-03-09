@@ -9,6 +9,9 @@ let index = {
 		$("#btn-update").on("click", () => { // function(){} 대신 ()=>{} 를 사용하는 이유 -> this를 바인딩 하기 위해서!
 			this.update();
 		});
+		$("#btn-reply-save").on("click", () => { // function(){} 대신 ()=>{} 를 사용하는 이유 -> this를 바인딩 하기 위해서!
+			this.replySave();
+		});
 	},
 	save: function() {
 		//alert('user의 save함수 호출됨');
@@ -65,6 +68,40 @@ let index = {
 		}).done(function(resp) {
 			alert("글 수정이 완료되었습니다.");
 			location.href = "/";
+		}).fail(function(error) {
+			alert(JSON.stringify(error));
+		});
+	},
+	
+	replySave: function() {
+		let data = {
+			userId: $("#userId").val(),
+			boardId: $("#boardId").val(),
+			content: $("#reply-content").val()
+		};
+		
+		$.ajax({
+			type: "POST",
+			url: `/api/board/${data.boardId}/reply`,
+			data: JSON.stringify(data),
+			contentType: "application/json; charset=utf-8",
+			dataType: "json"
+		}).done(function(resp) {
+			alert("댓글 작성이 완료되었습니다.");
+			location.href = `/board/${data.boardId}`;
+		}).fail(function(error) {
+			alert(JSON.stringify(error));
+		});
+	},
+	
+	replyDelete: function(boardId, replyId) {
+		$.ajax({
+			type: "DELETE",
+			url: `/api/board/${boardId}/reply/${replyId}`,
+			dataType: "json"
+		}).done(function(resp) {
+			alert("댓글 삭제 성공");
+			location.href = `/board/${boardId}`;
 		}).fail(function(error) {
 			alert(JSON.stringify(error));
 		});
